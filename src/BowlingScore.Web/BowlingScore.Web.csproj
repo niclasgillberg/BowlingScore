@@ -129,8 +129,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\BowlingFrame.cs" />
-    <Compile Include="Logic\IScoreCalculator.cs" />
-    <Compile Include="Models\BowlingScore.cs" />
+    <Compile Include="Models\BowlingSession.cs" />
+    <Compile Include="Models\FrameState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -147,6 +147,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Controllers\" />
+    <Folder Include="Logic\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
