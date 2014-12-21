@@ -4,6 +4,7 @@ namespace BowlingScore.Web.Models
     {
         public int First { get; set; }
         public int Second { get; set; }
+        public int Extra { get; set; }
 
         public FrameState State
         {

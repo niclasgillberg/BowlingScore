@@ -28,10 +28,21 @@ namespace BowlingScore.Web.Models
                             continue;
 
                         var nextFrame = Frames[i + 1];
-                        frameResult = 10 + nextFrame.First;
-                        if (frame.State == FrameState.Strike)
+                        if(frame.State == FrameState.Spare)
+                            frameResult = 10 + nextFrame.First;
+                        else
                         {
-                            frameResult += nextFrame.Second;
+                            if (nextFrame.State == FrameState.Strike)
+                            {
+                                if (Frames.Count <= i + 2)
+                                    continue;
+
+                                var secondNextFrame = Frames[i + 2];
+
+                                frameResult = 10 + 10 + secondNextFrame.First;
+                            }
+                            else
+                                frameResult = 10 + nextFrame.First + nextFrame.Second;
                         }
                     }
                     

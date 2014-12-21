@@ -126,17 +126,6 @@ namespace BowlingScore.Web.Tests.Logic
         }
 
         [Fact]
-        public void WhenTwoStrikeFramesAreProvided_ItReturnsTwenty()
-        {
-            var session = new BowlingSession();
-
-            session.Frames.Add(new BowlingFrame {First = 10});
-            session.Frames.Add(new BowlingFrame {First = 10});
-
-            session.Score.ShouldBe(20);
-        }
-
-        [Fact]
         public void WhenOneSpareAndOneStrikeFrameAreProvided_ItReturnsTwenty()
         {
             var session = new BowlingSession();
@@ -145,6 +134,36 @@ namespace BowlingScore.Web.Tests.Logic
             session.Frames.Add(new BowlingFrame {First = 10});
 
             session.Score.ShouldBe(20);
+        }
+
+        [Theory]
+        [InlineData(45, 5, 0)]
+        [InlineData(51, 7, 0)]
+        [InlineData(47, 1, 7)]
+        public void WhenTwoConsecutiveStrikesAndOneOpenAreProvided_ItReturnsTheCorrectResult(int expected, int first, int second)
+        {
+            var session = new BowlingSession();
+
+            session.Frames = BuildFrames(new[]
+            {
+                new[] {10, 0},
+                new[] {10, 0},
+                new[] {first, second}
+            });
+
+            session.Score.ShouldBe(expected);
+        }
+
+        [Fact]
+        public void WhenThreeStrikeFramesAreProvided_ItReturnsThirty()
+        {
+            var session = new BowlingSession();
+
+            session.Frames.Add(new BowlingFrame {First = 10});
+            session.Frames.Add(new BowlingFrame {First = 10});
+            session.Frames.Add(new BowlingFrame {First = 10});
+
+            session.Score.ShouldBe(30);
         }
 
         [Theory]
@@ -159,6 +178,47 @@ namespace BowlingScore.Web.Tests.Logic
             session.Frames.Add(new BowlingFrame{First = frame[0], Second = frame[1]});
 
             session.Score.ShouldBe(expected);
+        }
+
+        [Theory]
+        [InlineData(0, new[]{0,0}, new[]{0,0}, new[]{0,0}, new[]{0,0}, new[]{0,0})] // Only gutters
+        [InlineData(40, new[]{4,4}, new[]{4,4}, new[]{4,4}, new[]{4,4}, new[]{4,4})]
+        [InlineData(35, new[]{1,6}, new[]{7,0}, new[]{3,4}, new[]{5,2}, new[]{0,7})]
+        [InlineData(28, new[]{1,6}, new[]{7,0}, new[]{3,4}, new[]{5,2}, new[]{10,0})] // Last is a strike
+        [InlineData(28, new[]{1,6}, new[]{7,0}, new[]{3,4}, new[]{5,2}, new[]{5,5})] // Last is a spare
+        [InlineData(46, new[]{10, 0}, new[]{7,0}, new[]{3,4}, new[]{5,2}, new[]{4,4})] // First is a strike
+        [InlineData(46, new[]{7, 3}, new[]{7,0}, new[]{3,4}, new[]{5,2}, new[]{4,4})] // First is a spare
+        [InlineData(42, new[]{7, 3}, new[]{3,4}, new[]{7,0}, new[]{5,2}, new[]{4,4})] // First is a spare
+        [InlineData(44, new[]{1, 6}, new[]{3,4}, new[]{7,3}, new[]{5,2}, new[]{4,4})] // Third is a spare
+        [InlineData(41, new[]{1, 6}, new[]{3,4}, new[]{7,3}, new[]{2,5}, new[]{4,4})] // Third is a spare
+        [InlineData(46, new[]{1, 6}, new[]{3,4}, new[]{10,0}, new[]{2,5}, new[]{4,4})] // Third is a strike
+        [InlineData(58, new[]{7, 3}, new[]{1,9}, new[]{5,5}, new[]{4,6}, new[]{8,2})] // All spares
+        [InlineData(90, new[]{10,0}, new[]{10,0}, new[]{10,0}, new[]{10,0}, new[]{10,0})] // All strikes
+        [InlineData(117, new[]{10,0}, new[]{10,0}, new[]{10,0}, new[]{10,0}, new[]{9,0})] // All but last are strikes
+        public void WhenFiveFramesAreProvided_ItReturnsTheCorrectResult(int expected, int[] first, int[] second, int[] third, int[] fourth, int[] fifth)
+        {
+            var session = new BowlingSession();
+
+            session.Frames = BuildFrames(new[]
+            {
+                first,
+                second,
+                third,
+                fourth,
+                fifth
+            });
+
+            session.Score.ShouldBe(expected);
+        }
+
+        private List<BowlingFrame> BuildFrames(int[][] framesValues)
+        {
+            return framesValues.Select(frame => new BowlingFrame
+            {
+                First = frame[0],
+                Second = frame[1],
+                Extra = frame.Length == 3 ? frame[2] : 0
+            }).ToList();
         }
     }
 }
