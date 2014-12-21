@@ -1,0 +1,18 @@
+﻿body {
+  background: hsl(0, 0%, 90%);
+  min-height: 100%;
+}
+
+#applicationHost {
+  height: 100%;
+}
+
+.total-score {
+  font-size: 20em;
+  margin: 0 auto;
+}
+
+.frames {
+  margin: 0 auto;
+  padding: 0;
+}
