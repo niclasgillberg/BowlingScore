@@ -258,6 +258,51 @@ namespace BowlingScore.Web.Tests.Logic
             session.Score.ShouldBe(300);
         }
 
+        [Theory]
+        [InlineData(10, 0, 0)]
+        [InlineData(15, 5, 0)]
+        [InlineData(15, 0, 5)]
+        [InlineData(20, 5, 5)]
+        public void WhenLastFrameIsStrikeFollowedByNoneStrikeRoll_ItHandlesItCorrectly(int expected, int firstRoll, int secondRoll)
+        {
+            var session = new BowlingSession();
+
+            session.Frames = BuildFrames(new[]
+            {
+                new[] {0, 0},
+                new[] {0, 0},
+                new[] {0, 0},
+                new[] {0, 0},
+                new[] {0, 0},
+                new[] {0, 0},
+                new[] {0, 0},
+                new[] {0, 0},
+                new[] {0, 0},
+                new[] {10, firstRoll, secondRoll}
+            });
+
+            session.Score.ShouldBe(expected);
+        }
+
+        [Theory]
+        [InlineData(0, new[]{0,0}, new[]{0,0}, new[]{0,0}, new[]{0,0}, new[]{0,0}, new[]{0,0}, new[]{0,0}, new[]{0,0}, new[]{0,0}, new[]{0,0})]
+        [InlineData(173, new[]{8,1}, new[]{10,0}, new[]{6,2}, new[]{10,0}, new[]{8,2}, new[]{10,0}, new[]{9,1}, new[]{9,0}, new[]{9,1}, new[]{10,10,10})]
+        [InlineData(174, new[]{10,0}, new[]{7,3}, new[]{10,0}, new[]{6,4}, new[]{10,0}, new[]{8,2}, new[]{10,0}, new[]{7,3}, new[]{8,0}, new[]{8,0,0})]
+        [InlineData(150, new[]{10,0}, new[]{9,0}, new[]{9,1}, new[]{8,1}, new[]{6,4}, new[]{6,3}, new[]{8,2}, new[]{7,3}, new[]{6,4}, new[]{10,6,1})]
+        [InlineData(182, new[]{9,1}, new[]{6,3}, new[]{10,0}, new[]{8,2}, new[]{6,3}, new[]{10,0}, new[]{10,0}, new[]{10,0}, new[]{8,2}, new[]{9,1,5})]
+        [InlineData(279, new[]{10,0}, new[]{10,0}, new[]{10,0}, new[]{10,0}, new[]{10,0}, new[]{10,0}, new[]{9,1}, new[]{10,0}, new[]{10,0}, new[]{10,10,10})]
+        public void ControlTests(int expected, int[] first, int[] second, int[] third, int[] fourth, int[] fifth, int[] sixth, int[] seventh, int[] eigth, int[] ninth, int[] tenth)
+        {
+            var session = new BowlingSession();
+
+            session.Frames = BuildFrames(new[]
+            {
+                first, second, third, fourth, fifth, sixth, seventh, eigth, ninth, tenth
+            });
+
+            session.Score.ShouldBe(expected);
+        }
+
         private List<BowlingFrame> BuildFrames(int[][] framesValues)
         {
             return framesValues.Select(frame => new BowlingFrame

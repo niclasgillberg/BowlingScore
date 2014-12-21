@@ -23,15 +23,20 @@ namespace BowlingScore.Web.Models
                         frames.Add(new BowlingFrame {First = frames[9].Extra.Value});
                     if (frames[9].State == FrameState.Strike)
                     {
-                        if(frames[9].Second.HasValue)
-                            frames.Add(new BowlingFrame {First = frames[9].Second.Value});
-                        if(frames[9].Extra.HasValue)
-                            frames.Add(new BowlingFrame {First = frames[9].Extra.Value});
+                        if (frames[9].Second.HasValue)
+                        {
+                            var extraFrame = new BowlingFrame {First = frames[9].Second.Value};
+                            frames.Add(extraFrame);
+                            if (extraFrame.State != FrameState.Strike)
+                                extraFrame.Second = frames[9].Extra;
+                            else if(frames[9].Extra.HasValue)
+                                frames.Add(new BowlingFrame {First = frames[9].Extra.Value});
+                        }
                     }
 
                 }
 
-                for (int i = 0; i < frames.Count; i++)
+                for (int i = 0; i < Frames.Count; i++)
                 {
                     var frame = frames[i];
 
