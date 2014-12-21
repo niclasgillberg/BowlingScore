@@ -211,6 +211,53 @@ namespace BowlingScore.Web.Tests.Logic
             session.Score.ShouldBe(expected);
         }
 
+        [Theory]
+        [InlineData(10, 0)]
+        [InlineData(15, 5)]
+        [InlineData(20, 10)]
+        public void WhenTenthFrameIsASpare_ItCountsTheExtraRoll(int expected, int extraRoll)
+        {
+            var session = new BowlingSession();
+
+            session.Frames = BuildFrames(new[]
+            {
+                new[] {0, 0},
+                new[] {0, 0},
+                new[] {0, 0},
+                new[] {0, 0},
+                new[] {0, 0},
+                new[] {0, 0},
+                new[] {0, 0},
+                new[] {0, 0},
+                new[] {0, 0},
+                new[] {5, 5, extraRoll}
+            });
+
+            session.Score.ShouldBe(expected);
+        }
+
+        [Fact]
+        public void WhenThePerferctGameIsProvided_ItReturnsThePerfectScore()
+        {
+            var session = new BowlingSession();
+
+            session.Frames = BuildFrames(new[]
+            {
+                new[] {10, 0},
+                new[] {10, 0},
+                new[] {10, 0},
+                new[] {10, 0},
+                new[] {10, 0},
+                new[] {10, 0},
+                new[] {10, 0},
+                new[] {10, 0},
+                new[] {10, 0},
+                new[] {10, 10, 10}
+            });
+
+            session.Score.ShouldBe(300);
+        }
+
         private List<BowlingFrame> BuildFrames(int[][] framesValues)
         {
             return framesValues.Select(frame => new BowlingFrame
