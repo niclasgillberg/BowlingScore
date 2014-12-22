@@ -138,6 +138,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\JsonNetResult.cs" />
+    <Compile Include="Infrastructure\ApplicationController.cs" />
     <Compile Include="Models\BowlingFrame.cs" />
     <Compile Include="Models\BowlingSession.cs" />
     <Compile Include="Models\FrameState.cs" />
@@ -155,10 +157,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-    <Folder Include="client\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\BowlingScore.ts">
       <SubType>Code</SubType>

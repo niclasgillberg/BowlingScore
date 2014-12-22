@@ -22,7 +22,7 @@ body {
   margin: 20vh auto;
 }
 
-.total-score {
+#total-score {
   font-size: 20em;
   text-align: center;
   margin-bottom: 5vh;
