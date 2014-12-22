@@ -2,8 +2,8 @@
 
 module BowlingScore {
   class Session {
-    private currentFrame: number;
-    private currentRoll: number;
+    private currentFrame = 0;
+    private currentRoll = 0;
     private frames: Frame[];
     private resultTarget;
 
@@ -11,20 +11,19 @@ module BowlingScore {
       var frame: Frame;
       this.resultTarget = resultTarget;
       this.frames = [];
+
+      // Split the inputs for the first nine frames
       for (var i = 0; i < 9; i++) {
         var frameRolls = elems.splice(0, 2);
         frame = new Frame(frameRolls);
         frame.onComplete(this.updateScore.bind(this));
         this.frames.push(frame);
       }
+
+      // Handle the last frame, since it has an extra roll
       frame = new Frame(elems, true);
       frame.onComplete(this.updateScore.bind(this));
       this.frames.push(frame);
-    }
-
-    start() {
-      this.currentFrame = 0;
-      this.currentRoll = 0;
     }
 
     updateScore() {
@@ -32,6 +31,7 @@ module BowlingScore {
       var continueToNextFrame = true;
       var frameCount = 0;
 
+      // Parse out all complete frames
       while (continueToNextFrame && frameCount < 10) {
         var frame = this.frames[frameCount];
         if (frame.isComplete())
@@ -60,6 +60,8 @@ module BowlingScore {
 
     constructor(elems: JQuery, extraCounts: boolean = false) {
       console.log('Creating frame');
+
+      // Attach event handlers
       $(elems[0]).on("change", this.updateFirstRoll.bind(this));
       $(elems[1]).on("change", this.updateSecondRoll.bind(this));
       $(elems[2]).on("change", this.updateExtraRoll.bind(this));
@@ -126,8 +128,6 @@ module BowlingScore {
   }
 
   $(() => {
-    console.log("Application started");
-
     var session = new Session($('.roll > input'), $('#total-score'));
   });
 }

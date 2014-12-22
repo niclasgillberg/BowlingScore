@@ -3,6 +3,8 @@ var BowlingScore;
 (function (BowlingScore) {
     var Session = (function () {
         function Session(elems, resultTarget) {
+            this.currentFrame = 0;
+            this.currentRoll = 0;
             var frame;
             this.resultTarget = resultTarget;
             this.frames = [];
@@ -12,14 +14,11 @@ var BowlingScore;
                 frame.onComplete(this.updateScore.bind(this));
                 this.frames.push(frame);
             }
+            // Handle the last frame, since it has an extra roll
             frame = new Frame(elems, true);
             frame.onComplete(this.updateScore.bind(this));
             this.frames.push(frame);
         }
-        Session.prototype.start = function () {
-            this.currentFrame = 0;
-            this.currentRoll = 0;
-        };
         Session.prototype.updateScore = function () {
             var _this = this;
             var frames = [];
@@ -46,6 +45,7 @@ var BowlingScore;
             if (extraCounts === void 0) { extraCounts = false; }
             this.listeners = [];
             console.log('Creating frame');
+            // Attach event handlers
             $(elems[0]).on("change", this.updateFirstRoll.bind(this));
             $(elems[1]).on("change", this.updateSecondRoll.bind(this));
             $(elems[2]).on("change", this.updateExtraRoll.bind(this));
@@ -101,7 +101,6 @@ var BowlingScore;
         return Frame;
     })();
     $(function () {
-        console.log("Application started");
         var session = new Session($('.roll > input'), $('#total-score'));
     });
 })(BowlingScore || (BowlingScore = {}));
